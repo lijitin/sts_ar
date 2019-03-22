@@ -1,0 +1,36 @@
+---
+title: "sts_deck_ar"
+author: "triballs"
+date: "March 11, 2019"
+output: html_document
+---
+
+# An attempt in running association rules on deck sets in Slay the Spire.
+
+## Loading a single run
+```{r}
+library(rjson)
+
+path <- "C:/myapps/SlayTheSpire-Data-Analytics/rundata/user1/IRONCLAD" # directory path for the .run files being read
+temp <- list.files(path, pattern="*.run", full.names=TRUE)  # store the full filepaths of all the .run files as a chr vector
+deck_list <- vector(mode = "character", length = length(temp))
+for(i in seq(temp)){
+  d <- fromJSON(file = temp[i])
+  deck_list[i] <- d$master_deck
+}
+rm(d)
+
+setwd("C:/myapps/sts_ar")
+write.csv(deck_list, file = "user1_ironchad.csv")
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
