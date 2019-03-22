@@ -7,24 +7,36 @@ output: html_document
 
 # An attempt in running association rules on deck sets in Slay the Spire.
 
-## Loading a single run
+## Extracting deck lists from raw rundata files.
 ```{r}
+rm(list = ls())
 library(rjson)
 
-path <- "C:/myapps/SlayTheSpire-Data-Analytics/rundata/user1/IRONCLAD" # directory path for the .run files being read
+path <- paste(getwd(),"/rundata/user1/IRONCLAD", sep="") # directory path for the .run files being read
 temp <- list.files(path, pattern="*.run", full.names=TRUE)  # store the full filepaths of all the .run files as a chr vector
-deck_list <- vector(mode = "character", length = length(temp))
+deck_list <- vector(mode = "list", length = length(temp))
 for(i in seq(temp)){
   d <- fromJSON(file = temp[i])
-  deck_list[i] <- d$master_deck
+  deck_list[[i]] <- d$master_deck
 }
-rm(d)
 
 setwd("C:/myapps/sts_ar")
-write.csv(deck_list, file = "user1_ironchad.csv")
-
+filename <- "user1.ironchad.csv"
+cat("", file = filename, append = FALSE)
+for(entry in deck_list){
+  cat(entry, file = filename, sep = ",", append = TRUE)
+  cat("\n", file = filename, append = TRUE)
+}
 ```
 
+
+## read the deck_list from exported .csv
+```{r}
+u1_chad <- read.transactions("./user1.ironchad.csv", sep=",")
+summary(u1_chad)
+inspect(u1_chad[1:5])
+
+```
 ## Including Plots
 
 You can also embed plots, for example:
